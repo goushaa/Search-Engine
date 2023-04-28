@@ -27,7 +27,7 @@ public class CrawlerMain {
             System.out.println("error in reading initial links\nprogram will terminate");
             return;
         }
-
+        //test
 
         int cnt=0;
         Normalizer norm = new Normalizer();
