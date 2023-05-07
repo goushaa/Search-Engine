@@ -15,7 +15,7 @@ public class CrawlerMain {
         HashSet<String> visited = new HashSet<String>();
 
         try {
-            File Links = new File("E:\\CUFE\\2ndYear\\2ndTerm\\APT\\Project\\Search-Engine\\engine\\links.txt");
+            File Links = new File("links.txt");
             Scanner reader = new Scanner(Links);
             while (reader.hasNextLine()) {
                 linkQ.add(reader.nextLine());
@@ -28,7 +28,7 @@ public class CrawlerMain {
         int cnt = 0, numThread = 0;
 
         Scanner scan = new Scanner(System.in);
-        numThread = 1;
+        numThread = 2;
         numThread = Math.min(linkQ.size(), numThread);
 
         Thread[] threads = new Thread[numThread];

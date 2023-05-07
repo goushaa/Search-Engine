@@ -7,38 +7,42 @@ import org.jsoup.nodes.Element;
 
 import javax.lang.model.element.ElementKind;
 import javax.print.Doc;
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class Crawler implements Runnable {
-
+    int c=0;
     static int cnt = 0;
     final HashSet<String> visited;
     Queue<String> linkQ;
+    String name;
 
     Crawler(String _Link, HashSet<String> _visited) {
         visited = _visited;
         linkQ = new LinkedList<>();
         linkQ.add(_Link);
-        synchronized (visited){
+        synchronized (visited) {
             visited.add(_Link);
         }
         incrementCnt();
     }
 
     public static synchronized Boolean incrementCnt() {
-        if (cnt >= 6000)
-            return false;
 
+        if (cnt >= 50)
+            return false;
         cnt++;
         return true;
     }
 
     public boolean getLinks(Document doc) {
         for (Element link : doc.select("a[href]")) {
-            String new_link = link.absUrl("href");
+            String new_link = urlNormal.normalizeURL(link.absUrl("href"));
             synchronized (visited) {
                 if (visited.contains(new_link))
                     continue;
@@ -54,12 +58,30 @@ public class Crawler implements Runnable {
         return true;
     }
 
+    public boolean saveFile(Document doc) {
+        String file = null;
+        synchronized (visited) {
+          file = "html/"+name+(c++)+ ".html";
+        }
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            writer.write(doc.html());
+            writer.close();
+        }catch (IOException e){
+            return false;
+        }
+        return true;
+    }
+
     public void run() {
+        name=Thread.currentThread().getName();
+        boolean addLinks=true;
         while (!linkQ.isEmpty()) {
             Document doc = getDocument(linkQ.remove());
             if (doc == null) continue;
-            if (!getLinks(doc))
-                return;
+            saveFile(doc);
+            if (addLinks &&!getLinks(doc))
+                addLinks=false;
         }
     }
 
