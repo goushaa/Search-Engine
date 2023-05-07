@@ -1,12 +1,12 @@
 import React from "react";
 import "../CSS/WebsiteContainer.css"
 
-function WebsiteContainer(props) {
+function WebsiteContainer({ url, title, queryParagraph }) {
     return (
         <div id="webcontainer">
-            <a href={props.url}>{props.title}</a>
-            <h2>{props.url}</h2>
-            <p>{props.queryParagraph} </p>
+            <a href={url}>{title}</a>
+            <h2>{url}</h2>
+            <p>{queryParagraph} </p>
         </div>
     );
 }
